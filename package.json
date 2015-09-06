@@ -1,0 +1,16 @@
+{
+  "name": "explorer-cksfv",
+  "version": "1.0.0",
+  "description": "Cksfv plugin for explorer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "WTF",
+  "dependencies": {
+    "bluebird": "^2.9.34",
+    "crc": "^3.3.0"
+  }
+}
