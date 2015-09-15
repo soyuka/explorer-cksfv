@@ -4,6 +4,8 @@ var CksfvRouter = function(app, utils) {
 
     return res.handle('back', {info: 'Cksfv launched'}, 201)
   })
+
+  return app
 }
 
 module.exports = CksfvRouter
