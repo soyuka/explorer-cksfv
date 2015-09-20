@@ -1,8 +1,8 @@
-function registerHooks(config) {
+function registerHooks(config, route) {
   return {
     element: function(item) {
       if(item.ext == '.sfv') {
-        return '<a href="/p/cksfv?path='+item.path+'">Cksfv</a>'
+        return '<a href="'+route+'?path='+item.path+'">Cksfv</a>'
       }
 
       return ''
