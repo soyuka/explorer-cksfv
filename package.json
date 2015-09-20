@@ -1,6 +1,6 @@
 {
   "name": "explorer-cksfv",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Cksfv plugin for explorer",
   "main": "index.js",
   "scripts": {
