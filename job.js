@@ -4,16 +4,15 @@ var fs = Promise.promisifyAll(require('fs'))
 var eol = require('os').EOL
 var p = require('path')
 
-function CksfvJob(ipc, stat) {
-  if(!(this instanceof CksfvJob)) { return new CksfvJob(ipc, stat) }
+function CksfvJob(ipc) {
+  if(!(this instanceof CksfvJob)) { return new CksfvJob(ipc) }
   this.ipc = ipc
-  this.stat = stat
 }
 
 CksfvJob.prototype.check = function(user, path) {
   var self = this
 
-  this.stat.add(user.username, {message: 'Starting crc check on '+path})
+  this.ipc.send('cksfv:notify', user.username, {message: 'Starting crc check on '+path})
 
   fs.readFileAsync(path)
   .then(function(data) {
@@ -55,7 +54,10 @@ CksfvJob.prototype.check = function(user, path) {
       }
 
       if(errors === 0) {
-        self.stat.add(user.username, {message: 'Every crc32 of '+path+' is a perfect match!', path: path}) 
+        self.ipc.send('cksfv:notify', user.username, {
+          message: 'Cksfv done without errors',
+          path: path
+        }) 
       } else {
         var text = ''
 
@@ -64,22 +66,13 @@ CksfvJob.prototype.check = function(user, path) {
           text += 'CRC for path ' + i + ' does not match (expect '+e.original+' to equal '+e.calculate+') ' 
         }
 
-        return self.stat.add(user.username, {error: text})
+        return self.ipc.send('cksfv:notify', user.username, {message: text, error: true})
       }
     })
   })
   .catch(function(err) {
-     self.stat.add(user.username, {error: 'Error while reading '+path + '('+err.message+')'})
-     return self.ipc.send('error', err.stack)
+     self.ipc.send('cksfv:notify', user.username, {message: 'Error while reading '+path + '('+err.message+')', error: true})
   })
-}
-
-CksfvJob.prototype.info = function() {
-  return this.stat.get()
-}
-
-CksfvJob.prototype.clear = function(user) {
-  return this.stat.remove(user)
 }
 
 module.exports = CksfvJob
